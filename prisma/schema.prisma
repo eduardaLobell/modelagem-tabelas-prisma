@@ -1,0 +1,54 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Usuarios {
+    id String @db.Uuid @id @default(uuid())
+    nome String @db.VarChar(255)
+    idade Int @db.Integer 
+    email String @db.VarChar(100) @unique
+    password String @db.Text
+    linkGithub String? @db.VarChar(255) @map("link_github")
+
+    @@map("usuarios")
+}
+
+model Produtos {
+    id String @db.Uuid @id @default(uuid())
+    descricao String @db.Text
+    valor Float @db.DoublePrecision
+    quantidadeEmEstoque Int @db.Integer @map("quantidade_em_estoque")
+    tipoDoProduto String @db.VarChar(100) @map("tipo_do_produto")
+    data DateTime @db.Timestamp() @default(now())
+    disponivel Boolean? @db.Boolean
+
+    @@map("produtos")
+}
+
+model Lojas {
+    cnpj String @db.Char(14) @unique
+    nome String @db.VarChar(100) @map("nome")
+    seguimento String? @db.VarChar(255) @default("alimentação")
+    endereco String? @db.Text
+    telefone Int? @db.Integer
+    quantidadeDeFiliais Int @db.Integer @map("quantidade_de_filiais")
+    dataAbertura DateTime @db.Timestamp() @map("data_de_abertura")
+
+    @@map("lojas")
+}
+
+model Fornecedores {
+    id String @db.Uuid @id @default(uuid())
+    nome String @db.VarChar(100) @map("nome")
+    email String @db.VarChar(100) @unique
+    avaliacao Int @db.Integer
+    dataCriacao DateTime @db.Timestamp() @default(now()) @map("data_criacao")
+    dataAtualizacao DateTime @db.Timestamp() @updatedAt @map("data_atualizacao")
+
+    @@map("fornecedores")
+}
